@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :customer do
-    name "MyString"
-    wave_customer_id "MyString"
+    name Faker::Name.name
+    wave_customer_id Faker::Number.number(3)
   end
 end
