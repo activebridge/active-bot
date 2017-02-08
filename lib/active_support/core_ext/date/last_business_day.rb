@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'date'
 
 class Date
@@ -8,11 +9,10 @@ class Date
       day = beginning_of_month.next_month
       loop do
         day = day.prev_day
-        break unless day.saturday? or day.sunday?
+        break unless day.saturday? || day.sunday?
       end
       day
     end
-    alias_method :last_business_day_for_current_month, :last_business_day
+    alias last_business_day_for_current_month last_business_day
   end
-
 end
