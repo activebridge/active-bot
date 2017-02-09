@@ -4,7 +4,9 @@ FactoryGirl.define do
     name Faker::Name.name
     slack_name Faker::Name.name
     slack_id Faker::Name.name # e.g. U041S5G00
-    status 'developer'
+    status nil
+    deleted false
+    role 'developer'
 
     company
   end

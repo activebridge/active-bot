@@ -10,4 +10,16 @@ RSpec.describe User, type: :model do
   context 'validations' do
     it { should validate_presence_of(:slack_name) }
   end
+
+  context 'scopes' do
+    context '#active' do
+      let!(:users) { create_list(:user, 3) }
+      let!(:deleted_users) { create_list(:user, 2, deleted: true) }
+
+      it 'active' do
+        expect(User.count).to eq 5
+        expect(User.active.count).to eq 3
+      end
+    end
+  end
 end

@@ -4,4 +4,6 @@ class User < ApplicationRecord
   has_many :invoices
 
   validates :slack_name, presence: true
+
+  scope :active, -> { where(deleted: false) }
 end
