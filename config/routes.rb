@@ -2,9 +2,10 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  resource :application, only: :default do
-    get 'default'
-    post 'test_post_button'
+  resources :slacks, only: :check_project do
+    collection do
+      post 'check_project'
+    end
   end
 
   root to: 'application#default'
