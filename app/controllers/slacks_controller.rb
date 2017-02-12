@@ -1,25 +1,18 @@
 # frozen_string_literal: true
 class SlacksController < ApplicationController
   def check_project
-    client = Slack::Client.new
-
-    #ts: message_params['original_message']['ts'],
-    #channel: message_params['channel']['id'],
-
-    Rails.logger.info params['payload']['channel']
-    Rails.logger.info params['payload']['original_message']
-
     Rails.logger.info '===============>'
     Rails.logger.info message_params
 
     options = {
-      ts: params['payload']['original_message']['ts'],
-      channel: params['payload']['channel']['id'],
+      ts: message_params['original_message']['ts'],
+      channel: message_params['channel']['id'],
       text: 'Changed',
       attachments: [],
       as_user: true,
     }
 
+    client = Slack::Client.new
     client.chat_update(options)
 
     #render json: options, status: 200
@@ -30,7 +23,7 @@ class SlacksController < ApplicationController
   private
 
   def message_params
-    params.require['payload'].permit!
+    JSON.parse params['payload']
   end
 
   # params["payload"]
