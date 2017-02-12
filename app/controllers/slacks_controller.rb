@@ -3,48 +3,27 @@ class SlacksController < ApplicationController
   def check_project
 
     client = Slack::Client.new
-    result = client.im_open(user: 'U041S94UP') # D43ETBNQJ
-    #channel_id = 'D43ETBNQJ'
-    channel_id = result['channel']['id']
-
-    actions = []
-    Customer.find_in_batches(batch_size: 5) do |group|
-      group_array = []
-      group.each do |customer|
-        group_array << {
-          name: 'project',
-          text: customer.name,
-          type: 'button',
-          value: customer.id
-        }
-      end
-
-      actions << group_array
-    end
-
-    attachments = []
-    attachments << {
-      text: 'CHANGED',
-      fallback: 'You are not able to check the project.',
-      callback_id: 'checked_project',
-      color: 'good',
-      attachment_type: 'default',
-      actions: actions.first
-    }
 
     # default, primary, danger
     options = {
-      channel: channel_id,
-      text: 'Hello world',
+      ts: message_params['original_message']['ts'],
+      channel: message_params['channel']['id'],
+      text: 'Changed',
+      attachments: [],
       as_user: true,
-      attachments: attachments.to_json
     }
 
-    #client.chat_postMessage(options)
+    client.chat_update(options)
 
-    #render json: 'test_post_button', status: 200
+    #render json: options, status: 200
+    #
+    head :ok
+  end
 
-    render json: options, status: 200
+  private
+
+  def message_params
+    params.require['payload'].permit!
   end
 
   # params["payload"]
