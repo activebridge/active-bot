@@ -6,4 +6,12 @@ class User < ApplicationRecord
   validates :slack_name, presence: true
 
   scope :active, -> { where(deleted: false) }
+
+  def last_customer
+    invoices.last&.customer || company.default_customer
+  end
+
+  def self.accountant
+    find_by(role: 'accountant') || find_by(slack_name: 'alexmarchenko')
+  end
 end

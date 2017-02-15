@@ -8,6 +8,19 @@ RSpec.describe Invoice, type: :model do
   end
 
   context 'validations' do
-    it { should validate_presence_of(:hours) }
+    it { should validate_numericality_of(:hours).only_integer.is_greater_than(0).is_less_than_or_equal_to(400) }
   end
+
+  context 'scopes' do
+    context '#this_months' do
+      let!(:this_months_invoices) { create_list(:invoice, 3) }
+      let!(:invoices) { create_list(:invoice, 2, created_at: Time.zone.now + 1.month ) }
+
+      it 'active' do
+        expect(Invoice.count).to eq 5
+        expect(Invoice.this_months.count).to eq 3
+      end
+    end
+  end
+
 end

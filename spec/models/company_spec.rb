@@ -16,4 +16,12 @@ RSpec.describe Company, type: :model do
     it { expect(subject.class.default.name).to eq 'Active Bridge LLC' }
     it { expect(subject.class.default.wave_business_id).to eq 0 }
   end
+
+  describe '#default_customer' do
+    let!(:company) { create(:company) }
+    let!(:company_customers) { create_list(:customer, 4, company: company) }
+    let!(:other_customers) { create_list(:customer, 3) }
+
+    it { expect(company.default_customer).to eq company_customers.first  }
+  end
 end

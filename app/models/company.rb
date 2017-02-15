@@ -8,4 +8,8 @@ class Company < ApplicationRecord
     # wave_business_id is fake for now
     find_or_create_by(name: 'Active Bridge LLC', wave_business_id: 0)
   end
+
+  def default_customer
+    customers.first
+  end
 end

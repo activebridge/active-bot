@@ -22,4 +22,19 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '.accountant' do
+    let!(:accountant) { create(:user, role: 'accountant') }
+    it { expect(subject.class.accountant.name).to eq accountant.name }
+  end
+
+  describe '#last_customer' do
+    let!(:company) { create(:company) }
+    let(:user_with_invoice) { create(:user, company: company) }
+    let!(:user_without_invoice) { create(:user, company: company) }
+    let!(:invoice) { create(:invoice, user: user_with_invoice) }
+
+    it { expect(user_with_invoice.last_customer).to eq invoice.customer  }
+    it { expect(user_without_invoice.last_customer).to eq company.default_customer  }
+  end
 end
