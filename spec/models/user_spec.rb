@@ -21,6 +21,16 @@ RSpec.describe User, type: :model do
         expect(User.active.count).to eq 3
       end
     end
+
+    context '#developers' do
+      let!(:users) { create_list(:user, 3) }
+      let!(:developers_users) { create_list(:user, 2, role: 'admin') }
+
+      it 'developers' do
+        expect(User.count).to eq 5
+        expect(User.developers.count).to eq 3
+      end
+    end
   end
 
   describe '.accountant' do
