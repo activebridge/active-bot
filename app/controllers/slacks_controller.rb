@@ -7,37 +7,28 @@ class SlacksController < ApplicationController
   end
 
   def replace_original_message
-    hours = 164
-
     message = case message_params[:callback_id]
               when 'full_time'
                 if value == 'yes'
-                  Invoice.create(customer: customer, user: user, hours: hours)
-
-                  # FINAL step
-                  text = "#{customer.name}: #{hours} hours."
-                  full_time_params = { text: text, user_name: user.name, channel_id: channel_id }
-                  SlackDialogMessage.done(full_time_params)
-                  # TODO:: close the chat
-                  # TODO:: post to Alexandr
+                  Invoice.create(customer: customer, user: user, hours: 164)
+                  send_to_accountent
+                  generate_final_message
+                  # TODO:: close_the_chat_with_user
                 else
                   SlackDialogMessage.choose_project(channel_id)
                 end
               when 'choose_project'
                 Invoice.create(customer: customer, user: user)
 
-                insert_hours_params = { customer_name: customer.name, channel_id: channel_id }
+                puts insert_hours_params = { customer_name: customer.name, channel_id: channel_id }
                 SlackDialogMessage.insert_hours(insert_hours_params)
               when 'other_project'
                 if value == 'yes'
                   SlackDialogMessage.choose_project(channel_id)
                 else
-                  # FINAL step
-                  text = "#{customer.name}: #{hours} hours."
-                  full_time_params = { text: text, user_name: user.name, channel_id: channel_id }
-                  SlackDialogMessage.done(full_time_params)
-                  # TODO:: close the chat
-                  # TODO:: post to Alexandr
+                  send_to_accountent
+                  generate_final_message
+                  # TODO:: close_the_chat_with_user
                 end
               else
                 { text: 'Somethig was wrong. Please, let us know. ActiveBridge LLC.' }
@@ -47,6 +38,44 @@ class SlacksController < ApplicationController
   end
 
   private
+
+  def generate_final_message
+    full_time_params = { text: final_text_message, user_name: user.name, channel_id: channel_id }
+    SlackDialogMessage.done(full_time_params)
+  end
+
+  def final_text_message
+    user = User.active.developers.where(slack_id: 'U041S94UP').first
+    current_month_invoices = user.invoices.this_months.includes(:customer)
+    text = ''
+    current_month_invoices.each do |invoice|
+      text += " • #{invoice.customer_name}: #{invoice.hours} hours. \n"
+    end
+
+    text
+  end
+
+  def current_month_invoices
+    user.invoices.this_months.includes(:customer)
+  end
+
+  def send_to_accountent
+    result = client.im_open(user: User.accountant.slack_id)
+    channel_id = result['channel']['id']
+
+    text = "*#{user.name}* (slack_id: _#{user.slack_name}_):\n" + final_text_message
+    options = { channel_id: channel_id, text: text }
+    message = SlackDialogMessage.accountant(options)
+    client.chat_postMessage(message)
+  end
+
+  def close_the_chat_with_user
+    client.im_close(channel: channel_id)
+  end
+
+  def client
+    @client ||= Slack::Client.new
+  end
 
   def customer
     return Customer.find(value) if choose_project?

@@ -30,5 +30,4 @@ class SlackApi
       response = http.request(request)
     end
   end
-
 end

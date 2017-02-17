@@ -4,11 +4,10 @@ class SlackRealtime
     realtime_client = client.realtime
 
     realtime_client.on :hello do
-      puts 'LETS GO =======>>>'
+      puts 'LETS GO SlackRealtime =======>>>'
     end
 
     realtime_client.on :message do |params|
-      puts params.to_json
       message = params['text']
 
       if message.to_i > 0
@@ -20,8 +19,6 @@ class SlackRealtime
           message = SlackDialogMessage.other_project(params['channel'])
           client = Slack::Client.new
           client.chat_postMessage(message)
-
-          # TODO:: post to Alexandr
         end
       end
     end

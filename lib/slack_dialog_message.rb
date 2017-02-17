@@ -76,6 +76,16 @@ class SlackDialogMessage
       options
     end
 
+    def accountant(params = {})
+      options = {
+        channel: params[:channel_id],
+        text: params[:text],
+        as_user: true
+      }
+
+      options
+    end
+
     # Message will be edit by slack hook
     # no need attachments.to_json here
     # more details, please review SlackApi.update_message
@@ -83,6 +93,7 @@ class SlackDialogMessage
       options = {
         channel: params[:channel_id],
         text: params[:text],
+        as_user: true,
         attachments: [
           {
             text: "Thank you, my dear #{params[:user_name]}. :wink:",

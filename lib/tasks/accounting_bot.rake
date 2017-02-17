@@ -6,7 +6,7 @@ task accounting_bot: :environment do # should run once in a months (last busines
 
     # TODO: remove scope where(slack_id: 'U041S94UP'), send only to me
     User.active.developers.where(slack_id: 'U041S94UP').each do |user|
-      result = client.im_open(user: user.slack_id) # D43ETBNQJ
+      result = client.im_open(user: user.slack_id)
       channel_id = result['channel']['id']
 
       options = { channel_id: channel_id, customer_name: user.last_customer_name, hours: 164 }

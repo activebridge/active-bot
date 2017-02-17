@@ -79,12 +79,25 @@ RSpec.describe SlackDialogMessage do
     it { expect(SlackDialogMessage.other_project(channel_id)).to eq options  }
   end
 
+  describe '#accountant' do
+    let(:params) { {channel_id: channel_id, text: text} }
+    let(:options) {
+      {
+        channel: channel_id,
+        text: text,
+        as_user: true
+      }
+    }
+    it { expect(SlackDialogMessage.accountant(params)).to eq options  }
+  end
+
   describe '#done' do
     let(:params) { {channel_id: channel_id, text: text, user_name: user_name} }
     let(:options) {
       {
         channel: channel_id,
         text: text,
+        as_user: true,
         attachments: [
           {
             text: "Thank you, my dear #{user_name}. :wink:",
