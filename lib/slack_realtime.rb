@@ -4,7 +4,7 @@ class SlackRealtime
     realtime_client = client.realtime
 
     realtime_client.on :hello do
-      puts 'LETS GO SlackRealtime =======>>>'
+      Rails.logger.info 'LETS GO SlackRealtime =======>>>'
     end
 
     realtime_client.on :message do |params|
