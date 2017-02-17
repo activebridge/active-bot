@@ -20,7 +20,7 @@ class SlacksController < ApplicationController
               when 'choose_project'
                 Invoice.create(customer: customer, user: user)
 
-                puts insert_hours_params = { customer_name: customer.name, channel_id: channel_id }
+                insert_hours_params = { customer_name: customer.name, channel_id: channel_id }
                 SlackDialogMessage.insert_hours(insert_hours_params)
               when 'other_project'
                 if value == 'yes'
