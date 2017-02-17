@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class SlacksController < ApplicationController
-  after_action :replace_original_message, only: :check_project
+  after_action :replace_original_message, only: :check_project, if: :replace_message?
 
   def check_project
     head :ok
@@ -107,5 +107,9 @@ class SlacksController < ApplicationController
 
   def choose_project?
     message_params[:callback_id] == 'choose_project'
+  end
+
+  def replace_message?
+    params.has_key?('payload')
   end
 end
