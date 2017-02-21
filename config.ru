@@ -3,6 +3,7 @@
 
 require_relative 'config/environment'
 require_relative 'lib/slack_realtime'
+require_relative 'lib/slack_dialog_message'
 
 Thread.abort_on_exception = true
 Thread.new do
