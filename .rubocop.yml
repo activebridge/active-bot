@@ -8,7 +8,7 @@ AllCops:
     - 'log/**/*'
     - 'Gemfile'
     - 'spec/support/**/*'
-    - 'spec/lib/**/*'
+    - 'spec/**/*'
 Metrics/LineLength:
   Enabled: false
 Style/Documentation:
