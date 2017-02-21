@@ -9,6 +9,7 @@ class SlackRealtime
     end
 
     realtime_client.on :message do |params|
+      Rails.logger.info params
       slack_message = params['text']
       slack_channel = params['channel']
 
