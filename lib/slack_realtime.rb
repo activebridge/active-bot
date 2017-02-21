@@ -29,7 +29,7 @@ class SlackRealtime
             client.chat_postMessage(new_message)
           end
         end
-      elsif user
+      else
         # Admin OR Accountant (not a developer)
         text = case slack_message
                when /customer list/
