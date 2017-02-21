@@ -17,7 +17,8 @@ class SlackRealtime
       user = company.users.find_by(slack_id: params['user'])
 
       # TODO: !!! refactor the code
-      if user.developer?
+      # TEMPORARRY FIX FOR HEROKU: check if user exist
+      if user && user.developer?
         # TODO: day off for developer
         if slack_message.to_i.positive?
           last_invoice = user.invoices.last
@@ -28,7 +29,7 @@ class SlackRealtime
             client.chat_postMessage(new_message)
           end
         end
-      else
+      elsif user
         # Admin OR Accountant (not a developer)
         text = case slack_message
                when /customer list/
