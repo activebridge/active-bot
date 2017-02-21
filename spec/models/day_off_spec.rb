@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe DayOff, type: :model do
@@ -13,7 +14,7 @@ RSpec.describe DayOff, type: :model do
   context 'scopes' do
     context '#this_months' do
       let!(:this_months_day_offs) { create_list(:day_off, 3) }
-      let!(:day_offs) { create_list(:day_off, 2, date: Date.current + 1.month ) }
+      let!(:day_offs) { create_list(:day_off, 2, date: Date.current + 1.month) }
 
       it 'count' do
         expect(DayOff.count).to eq 5

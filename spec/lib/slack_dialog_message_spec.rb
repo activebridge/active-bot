@@ -9,8 +9,8 @@ RSpec.describe SlackDialogMessage do
   let(:hours) { 164 }
 
   describe '#full_time' do
-    let(:params) { {channel_id: channel_id, hours: hours, customer_name: customer_name} }
-    let(:options) {
+    let(:params) { { channel_id: channel_id, hours: hours, customer_name: customer_name } }
+    let(:options) do
       {
         channel: channel_id,
         text: "Have you been working full time for #{customer_name} customer this month?",
@@ -40,15 +40,15 @@ RSpec.describe SlackDialogMessage do
           }
         ].to_json
       }
-    }
-    it { expect(SlackDialogMessage.full_time(params)).to eq options  }
+    end
+    it { expect(SlackDialogMessage.full_time(params)).to eq options }
   end
 
   describe '#other_project' do
-    let(:options) {
+    let(:options) do
       {
         channel: channel_id,
-        text: "Any other project ...",
+        text: 'Any other project ...',
         as_user: true,
         attachments: [
           {
@@ -75,25 +75,25 @@ RSpec.describe SlackDialogMessage do
           }
         ].to_json
       }
-    }
-    it { expect(SlackDialogMessage.other_project(channel_id)).to eq options  }
+    end
+    it { expect(SlackDialogMessage.other_project(channel_id)).to eq options }
   end
 
   describe '#general' do
-    let(:params) { {channel_id: channel_id, text: text} }
-    let(:options) {
+    let(:params) { { channel_id: channel_id, text: text } }
+    let(:options) do
       {
         channel: channel_id,
         text: text,
         as_user: true
       }
-    }
-    it { expect(SlackDialogMessage.general(params)).to eq options  }
+    end
+    it { expect(SlackDialogMessage.general(params)).to eq options }
   end
 
   describe '#done' do
-    let(:params) { {channel_id: channel_id, text: text, user_name: user_name} }
-    let(:options) {
+    let(:params) { { channel_id: channel_id, text: text, user_name: user_name } }
+    let(:options) do
       {
         channel: channel_id,
         text: text,
@@ -105,13 +105,13 @@ RSpec.describe SlackDialogMessage do
           }
         ]
       }
-    }
-    it { expect(SlackDialogMessage.done(params)).to eq options  }
+    end
+    it { expect(SlackDialogMessage.done(params)).to eq options }
   end
 
   describe '#choose_project' do
     let!(:customers) { create_list(:customer, 7) }
-    let(:options) {
+    let(:options) do
       actions = []
       # batch_size is 5: limit for slack interactive buttons
       Customer.find_in_batches(batch_size: 5) do |group|
@@ -129,7 +129,7 @@ RSpec.describe SlackDialogMessage do
       end
 
       attachments = []
-      actions.each_with_index  do |action, index|
+      actions.each_with_index do |action, _index|
         attachments << {
           text: '',
           fallback: 'You are not able to check the project.',
@@ -148,22 +148,21 @@ RSpec.describe SlackDialogMessage do
       }
 
       options
-    }
+    end
 
-    it { expect(SlackDialogMessage.choose_project(channel_id)).to eq options  }
+    it { expect(SlackDialogMessage.choose_project(channel_id)).to eq options }
   end
 
   describe '#insert_hours' do
-    let(:params) { {channel_id: channel_id, customer_name: customer_name } }
-    let(:options) {
+    let(:params) { { channel_id: channel_id, customer_name: customer_name } }
+    let(:options) do
       {
         channel: channel_id,
         text: "How many hours you did you work for #{customer_name}?",
         attachments: [],
         as_user: true
       }
-    }
-    it { expect(SlackDialogMessage.insert_hours(params)).to eq options  }
+    end
+    it { expect(SlackDialogMessage.insert_hours(params)).to eq options }
   end
-
 end

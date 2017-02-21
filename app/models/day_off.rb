@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class DayOff < ApplicationRecord
   belongs_to :company
   belongs_to :user, optional: true

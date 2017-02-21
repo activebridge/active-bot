@@ -22,7 +22,7 @@ RSpec.describe Company, type: :model do
     let!(:company_customers) { create_list(:customer, 4, company: company) }
     let!(:other_customers) { create_list(:customer, 3) }
 
-    it { expect(company.default_customer).to eq company_customers.first  }
+    it { expect(company.default_customer).to eq company_customers.first }
   end
 
   describe '#accountant' do

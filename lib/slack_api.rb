@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SlackApi
   class << self
     def update_message(options = {})

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SlackDialogMessage
   class << self
     def full_time(params)
@@ -68,7 +69,7 @@ class SlackDialogMessage
 
       options = {
         channel: channel_id,
-        text: "Any other project ...",
+        text: 'Any other project ...',
         as_user: true,
         attachments: attachments.to_json
       }
@@ -123,7 +124,7 @@ class SlackDialogMessage
       end
 
       attachments = []
-      actions.each_with_index  do |action, index|
+      actions.each do |action|
         attachments << {
           text: '',
           fallback: 'You are not able to check the project.',

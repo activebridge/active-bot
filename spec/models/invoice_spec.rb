@@ -14,7 +14,7 @@ RSpec.describe Invoice, type: :model do
   context 'scopes' do
     context '#this_months' do
       let!(:this_months_invoices) { create_list(:invoice, 3) }
-      let!(:invoices) { create_list(:invoice, 2, created_at: Time.zone.now + 1.month ) }
+      let!(:invoices) { create_list(:invoice, 2, created_at: Time.zone.now + 1.month) }
 
       it 'count' do
         expect(Invoice.count).to eq 5
@@ -22,5 +22,4 @@ RSpec.describe Invoice, type: :model do
       end
     end
   end
-
 end

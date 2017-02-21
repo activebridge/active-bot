@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SlackRealtime
   class << self
     def run
@@ -15,9 +16,9 @@ class SlackRealtime
         company = Company.find_by(slack_team_id: params['team'])
         user = company.users.find_by(slack_id: params['user'])
 
-        # TODO:: !!! refactor the code
+        # TODO: !!! refactor the code
         if user.developer?
-          # TODO:: day off for developer
+          # TODO: day off for developer
           if slack_message.to_i > 0
             last_invoice = user.invoices.last
             if last_invoice && last_invoice.hours.nil?
@@ -43,25 +44,16 @@ class SlackRealtime
                  when /dayoff list/
                    company.day_offs.map(&:date).join("\n")
                  when /dayoff add/
-                   # TODO:: convert into the date
+                   # TODO: convert into the date
                    day_off = slack_message.match('(?<=dayoff add ).+')[0]
                    company.customers << Customer.find_or_create_by(date: convert_to_date(day_off))
                    "Day Off #{day_off} has been created."
                  when /dayoff delete/
-                   # TODO:: convert into the date
+                   # TODO: convert into the date
                    day_off = slack_message.match('(?<=dayoff delete ).+')[0]
                    company.day_offs.where(date: convert_to_date(day_off)).delete_all
                    "Day Off #{day_off} has been deleted."
-                 else
-                   nil
                  end
-
-          if text.present?
-            options = { text: text, channel_id: slack_channel }
-            new_message = SlackDialogMessage.general(options)
-            client.chat_postMessage(new_message)
-          end
-        end
       end
 
       realtime_client.start # listen a STREAM
@@ -72,6 +64,5 @@ class SlackRealtime
     rescue
       Date.today + 1.day
     end
-
   end
 end

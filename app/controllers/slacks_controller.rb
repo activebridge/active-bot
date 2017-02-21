@@ -13,7 +13,7 @@ class SlacksController < ApplicationController
                   Invoice.create(customer: customer, user: user, hours: user.current_month_working_hours)
                   send_to_accountent
                   generate_final_message
-                  # TODO:: close_the_chat_with_user
+                  # TODO: close_the_chat_with_user
                 else
                   SlackDialogMessage.choose_project(channel_id)
                 end
@@ -28,7 +28,7 @@ class SlacksController < ApplicationController
                 else
                   send_to_accountent
                   generate_final_message
-                  # TODO:: close_the_chat_with_user
+                  # TODO: close_the_chat_with_user
                 end
               else
                 { text: 'Somethig was wrong. Please, let us know. ActiveBridge LLC.' }
@@ -58,11 +58,11 @@ class SlacksController < ApplicationController
   end
 
   def company
-    # TODO:: User.accountant should depends on company
+    # TODO: User.accountant should depends on company
   end
 
   def send_to_accountent
-    # TODO:: User.accountant should depends on company
+    # TODO: User.accountant should depends on company
     company = Company.default
     result = client.im_open(user: company.accountant.slack_id)
     channel_id = result['channel']['id']
@@ -114,6 +114,6 @@ class SlacksController < ApplicationController
   end
 
   def replace_message?
-    params.has_key?('payload')
+    params.key?('payload')
   end
 end
