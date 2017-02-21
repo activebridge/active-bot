@@ -4,8 +4,7 @@ task accounting_bot: :environment do # should run once in a months (last busines
   if Date.today == Date.last_business_day_for_current_month
     client = Slack::Client.new
 
-    # TODO: remove scope where(slack_id: 'U041S94UP'), send only to me
-    User.active.developers.where(slack_id: 'U041S94UP').each do |user|
+    User.active.developers.each do |user|
       result = client.im_open(user: user.slack_id)
       channel_id = result['channel']['id']
 

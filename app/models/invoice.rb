@@ -7,7 +7,7 @@ class Invoice < ApplicationRecord
 
   validates_numericality_of :hours, only_integer: true, greater_than: 0, less_than_or_equal_to: 400, allow_nil: true
 
-  scope :this_months, lambda do
+  scope :this_months, lambda {
     where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-  end
+  }
 end
