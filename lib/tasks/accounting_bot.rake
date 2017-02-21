@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 desc 'Bot track the time of each user on a project for a month'
 task accounting_bot: :environment do # should run once in a months (last business day)
-  if Date.today == Date.last_business_day_for_current_month
+  #if Date.today == Date.last_business_day_for_current_month
     client = Slack::Client.new
 
-    User.active.developers.each do |user|
+    #User.active.developers.each do |user|
+    User.active.where(id: 57).each do |user|
       result = client.im_open(user: user.slack_id)
       channel_id = result['channel']['id']
 
@@ -12,5 +13,5 @@ task accounting_bot: :environment do # should run once in a months (last busines
       message = SlackDialogMessage.full_time(options)
       client.chat_postMessage(message)
     end
-  end
+  #end
 end
