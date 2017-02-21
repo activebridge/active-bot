@@ -5,6 +5,7 @@ RSpec.describe User, type: :model do
   context 'associations' do
     it { should belong_to(:company) }
     it { should have_many(:invoices) }
+    it { should have_many(:day_offs) }
   end
 
   context 'validations' do
@@ -33,11 +34,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.accountant' do
-    let!(:accountant) { create(:user, role: 'accountant') }
-    it { expect(subject.class.accountant.name).to eq accountant.name }
-  end
-
   describe '#last_customer' do
     let!(:company) { create(:company) }
     let(:user_with_invoice) { create(:user, company: company) }
@@ -47,4 +43,22 @@ RSpec.describe User, type: :model do
     it { expect(user_with_invoice.last_customer).to eq invoice.customer  }
     it { expect(user_without_invoice.last_customer).to eq company.default_customer  }
   end
+
+  describe '#developer?' do
+    let(:user_developer) { create(:user) }
+    let(:user_accountant) { create(:user, role: 'accountant') }
+
+    it { expect(user_developer.developer?).to be_truthy }
+    it { expect(user_accountant.developer?).to be_falsey }
+  end
+
+  describe '#current_month_working_hours' do
+    let(:user) { create(:user) }
+    let!(:general_dayoffs) { create_list(:day_off, 3, user: nil) }
+    let!(:user_dayoff) { create(:day_off, user: user) }
+    let!(:working_hours) { (Date.current_month_workdays.count - 4) * User::WORKING_HOURS_PER_DAY }
+
+    it { expect(user.current_month_working_hours).to eq working_hours }
+  end
+
 end

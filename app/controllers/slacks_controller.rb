@@ -10,7 +10,7 @@ class SlacksController < ApplicationController
     message = case message_params[:callback_id]
               when 'full_time'
                 if value == 'yes'
-                  Invoice.create(customer: customer, user: user, hours: 164)
+                  Invoice.create(customer: customer, user: user, hours: user.current_month_working_hours)
                   send_to_accountent
                   generate_final_message
                   # TODO:: close_the_chat_with_user
@@ -45,8 +45,6 @@ class SlacksController < ApplicationController
   end
 
   def final_text_message
-    user = User.active.developers.where(slack_id: 'U041S94UP').first
-    current_month_invoices = user.invoices.this_months.includes(:customer)
     text = ''
     current_month_invoices.each do |invoice|
       text += " • #{invoice.customer_name}: #{invoice.hours} hours. \n"
@@ -59,13 +57,19 @@ class SlacksController < ApplicationController
     user.invoices.this_months.includes(:customer)
   end
 
+  def company
+    # TODO:: User.accountant should depends on company
+  end
+
   def send_to_accountent
-    result = client.im_open(user: User.accountant.slack_id)
+    # TODO:: User.accountant should depends on company
+    company = Company.default
+    result = client.im_open(user: company.accountant.slack_id)
     channel_id = result['channel']['id']
 
     text = "*#{user.name}* (slack_id: _#{user.slack_name}_):\n" + final_text_message
     options = { channel_id: channel_id, text: text }
-    message = SlackDialogMessage.accountant(options)
+    message = SlackDialogMessage.general(options)
     client.chat_postMessage(message)
   end
 

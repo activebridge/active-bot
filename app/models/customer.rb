@@ -3,5 +3,5 @@ class Customer < ApplicationRecord
   belongs_to :company
   has_many :invoices
 
-  validates :name, :wave_customer_id, presence: true
+  validates :name, presence: true
 end

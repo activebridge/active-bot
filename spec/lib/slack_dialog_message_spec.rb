@@ -79,7 +79,7 @@ RSpec.describe SlackDialogMessage do
     it { expect(SlackDialogMessage.other_project(channel_id)).to eq options  }
   end
 
-  describe '#accountant' do
+  describe '#general' do
     let(:params) { {channel_id: channel_id, text: text} }
     let(:options) {
       {
@@ -88,7 +88,7 @@ RSpec.describe SlackDialogMessage do
         as_user: true
       }
     }
-    it { expect(SlackDialogMessage.accountant(params)).to eq options  }
+    it { expect(SlackDialogMessage.general(params)).to eq options  }
   end
 
   describe '#done' do

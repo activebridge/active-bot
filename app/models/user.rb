@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 class User < ApplicationRecord
+  WORKING_HOURS_PER_DAY = 8
   belongs_to :company
   has_many :invoices
+  has_many :day_offs
 
   delegate :name, to: :last_customer, prefix: true
 
@@ -14,7 +16,13 @@ class User < ApplicationRecord
     invoices.last&.customer || company.default_customer
   end
 
-  def self.accountant
-    find_by(role: 'accountant') || find_by(slack_name: 'alexmarchenko')
+  def developer?
+    role == 'developer'
+  end
+
+  def current_month_working_hours
+    day_offs = DayOff.general.this_months + self.day_offs.this_months
+    workdays_count = Date.current_month_workdays.count - day_offs.count
+    workdays_count * WORKING_HOURS_PER_DAY
   end
 end

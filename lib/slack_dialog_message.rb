@@ -76,7 +76,7 @@ class SlackDialogMessage
       options
     end
 
-    def accountant(params = {})
+    def general(params = {})
       options = {
         channel: params[:channel_id],
         text: params[:text],

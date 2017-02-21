@@ -16,7 +16,7 @@ RSpec.describe Invoice, type: :model do
       let!(:this_months_invoices) { create_list(:invoice, 3) }
       let!(:invoices) { create_list(:invoice, 2, created_at: Time.zone.now + 1.month ) }
 
-      it 'active' do
+      it 'count' do
         expect(Invoice.count).to eq 5
         expect(Invoice.this_months.count).to eq 3
       end

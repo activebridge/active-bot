@@ -9,6 +9,5 @@ RSpec.describe Customer, type: :model do
 
   context 'validations' do
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:wave_customer_id) }
   end
 end
