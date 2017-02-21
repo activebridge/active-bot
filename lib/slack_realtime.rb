@@ -20,16 +20,15 @@ class SlackRealtime
           # TODO:: day off for developer
           if slack_message.to_i > 0
             last_invoice = user.invoices.last
-            if last_invoice.hours.nil?
+            if last_invoice && last_invoice.hours.nil?
               last_invoice.update_attributes(hours: slack_message.to_i)
 
               new_message = SlackDialogMessage.other_project(slack_channel)
               client.chat_postMessage(new_message)
             end
           end
-
         else
-          # Admin OR Accountant (not a developer)
+          ## Admin OR Accountant (not a developer)
           text = case slack_message
                  when /customer list/
                    company.customers.map(&:name).join("\n")
@@ -57,12 +56,12 @@ class SlackRealtime
                    nil
                  end
 
-          return unless text
-          options = { text: text, channel_id: slack_channel }
-          new_message = SlackDialogMessage.general(options)
-          client.chat_postMessage(new_message)
+          if text.present?
+            options = { text: text, channel_id: slack_channel }
+            new_message = SlackDialogMessage.general(options)
+            client.chat_postMessage(new_message)
+          end
         end
-
       end
 
       realtime_client.start # listen a STREAM
