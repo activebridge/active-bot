@@ -19,7 +19,7 @@ class Date
       d1 = Date.new(Time.now.year, Time.now.month, 1) # first day of month\period
       d2 = Date.new(Time.now.year, Time.now.month, -1) # end day of month\period
       wdays = [0, 6] # weekend days by numbers on week
-      weekdays = (d1..d2).reject { |d| wdays.include? d.wday } # Day.wday number day in week
+      (d1..d2).reject { |d| wdays.include? d.wday } # Day.wday number day in week
     end
     alias current_month_workdays workdays
   end

@@ -19,7 +19,7 @@ class SlackRealtime
         # TODO: !!! refactor the code
         if user.developer?
           # TODO: day off for developer
-          if slack_message.to_i > 0
+          if slack_message.to_i.positive?
             last_invoice = user.invoices.last
             if last_invoice && last_invoice.hours.nil?
               last_invoice.update_attributes(hours: slack_message.to_i)
@@ -54,9 +54,16 @@ class SlackRealtime
                    company.day_offs.where(date: convert_to_date(day_off)).delete_all
                    "Day Off #{day_off} has been deleted."
                  end
-      end
 
-      realtime_client.start # listen a STREAM
+          if text.present?
+            options = { text: text, channel_id: slack_channel }
+            new_message = SlackDialogMessage.general(options)
+            client.chat_postMessage(new_message)
+          end
+        end
+
+        realtime_client.start # listen a STREAM
+      end
     end
 
     def convert_to_date(a_string)
