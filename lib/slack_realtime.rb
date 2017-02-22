@@ -16,7 +16,8 @@ class SlackRealtime
       company = Company.find_by(slack_team_id: params['team'])
       Rails.logger.info 'COMPANY ---->> '
       Rails.logger.info company.to_json
-      user = company.users.find_by(slack_id: params['user'])
+
+      user = company.users.find_by(slack_id: params['user']) if company
       Rails.logger.info 'USER ---->> '
       Rails.logger.info user.to_json
 
