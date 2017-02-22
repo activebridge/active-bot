@@ -14,17 +14,20 @@ class SlackRealtime
       slack_channel = params['channel']
 
       company = Company.find_by(slack_team_id: params['team'])
+      Rails.logger.info 'COMPANY ---->> '
+      Rails.logger.info company.to_json
       user = company.users.find_by(slack_id: params['user'])
+      Rails.logger.info 'USER ---->> '
+      Rails.logger.info user.to_json
 
       # TODO: !!! refactor the code
       # TEMPORARRY FIX FOR HEROKU: check if user exist
       if user && user.developer?
         # TODO: day off for developer
-        Rails.logger.info 'USER ---->> '
-        Rails.logger.info user.to_json
         if slack_message.to_i.positive?
           last_invoice = user.invoices.last
-          Rails.logger.info last_invoice
+          Rails.logger.info 'last_invoice ---->> '
+          Rails.logger.info last_invoice.to_json
 
           if last_invoice && last_invoice.hours.nil?
             last_invoice.update_attributes(hours: slack_message.to_i)
