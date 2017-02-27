@@ -16,7 +16,10 @@ class Bot::Api
     end
 
     def post_message(options = {})
-      client.im_open(user: options[:user_slack_id]) if options[:user_slack_id]
+      if options[:user_slack_id]
+        result = client.im_open(user: options[:user_slack_id])
+        options[:message].merge!(channel: result['channel']['id'])
+      end
       client.chat_postMessage(options[:message])
     end
 
