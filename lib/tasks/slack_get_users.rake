@@ -2,6 +2,7 @@
 desc 'Get a list of users from a slack'
 task get_users_from_slack: :environment do
   if Date.today == Date.last_business_day_for_current_month
+    # TODO: users should depends on company
     active_bridge = Company.default
     client = Slack::Client.new
     slack_users = client.users_list['members']

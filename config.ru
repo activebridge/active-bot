@@ -3,13 +3,9 @@
 
 require_relative 'config/environment'
 
-# require_relative 'lib/slack_realtime'
-# require_relative 'lib/slack_dialog_message'
-# Dir.glob('./lib/slack/**/*.rb').each { |file| require file }
-
 Thread.abort_on_exception = false
 Thread.new do
-  SlackRealtime.run
+  Bot::SlackRealtime.run
 end
 
 run Rails.application

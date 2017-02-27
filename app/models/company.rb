@@ -16,6 +16,6 @@ class Company < ApplicationRecord
   end
 
   def accountant
-    users.find_by(role: 'accountant')
+    users.find_by(role: 'accountant') || users.find_by(role: 'admin') || users.first
   end
 end

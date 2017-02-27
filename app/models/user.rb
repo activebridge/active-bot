@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :day_offs
 
   delegate :name, to: :last_customer, prefix: true
+  delegate :accountant, :customers, to: :company, prefix: true
 
   validates :slack_name, presence: true
 
@@ -18,6 +19,14 @@ class User < ApplicationRecord
 
   def developer?
     role == 'developer'
+  end
+
+  def admin?
+    role == 'admin'
+  end
+
+  def accountant?
+    role == 'accountant'
   end
 
   def current_month_working_hours

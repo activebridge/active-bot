@@ -52,6 +52,22 @@ RSpec.describe User, type: :model do
     it { expect(user_accountant.developer?).to be_falsey }
   end
 
+  describe '#admin?' do
+    let(:user_developer) { create(:user) }
+    let(:user_admin) { create(:user, role: 'admin') }
+
+    it { expect(user_admin.admin?).to be_truthy }
+    it { expect(user_developer.admin?).to be_falsey }
+  end
+
+  describe '#accountant?' do
+    let(:user_developer) { create(:user) }
+    let(:user_accountant) { create(:user, role: 'accountant') }
+
+    it { expect(user_accountant.accountant?).to be_truthy }
+    it { expect(user_developer.accountant?).to be_falsey }
+  end
+
   describe '#current_month_working_hours' do
     let(:user) { create(:user) }
     let!(:general_dayoffs) { create_list(:day_off, 3, user: nil) }

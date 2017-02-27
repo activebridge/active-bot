@@ -26,8 +26,27 @@ RSpec.describe Company, type: :model do
   end
 
   describe '#accountant' do
-    let!(:company) { create(:company) }
-    let!(:accountant) { create(:user, role: 'accountant', company: company) }
-    it { expect(company.accountant.name).to eq accountant.name }
+    context 'an accountant user' do
+      let!(:company) { create(:company) }
+      let!(:accountant) { create(:user, role: 'accountant', company: company) }
+
+      it { expect(company.accountant.name).to eq accountant.name }
+    end
+
+    # no an accountant role
+    context 'OR an admin user' do
+      let!(:company) { create(:company) }
+      let!(:admin) { create(:user, role: 'admin', company: company) }
+
+      it { expect(company.accountant.name).to eq admin.name }
+    end
+
+    # no accountant or admin role
+    context 'OR first user' do
+      let!(:company) { create(:company) }
+      let!(:developer) { create(:user, role: 'developer', company: company) }
+
+      it { expect(company.accountant.name).to eq developer.name }
+    end
   end
 end
