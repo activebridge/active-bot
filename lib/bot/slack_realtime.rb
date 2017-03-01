@@ -20,12 +20,11 @@ module Bot
           if user&.admin? || user&.accountant?
             # class_names: customer, dayoff
             # methods: list, add, delete
-            class_name, method, value = slack_message.split
-
+            class_name, method = slack_message.split
             object = "Bot::Realtime::#{class_name.capitalize}".safe_constantize
-            #byebug
 
             if object && object.instance_methods(false).include?(method.to_sym)
+              value = slack_message.split[2..-1].join(' ')
               realtime_params = { company: company, channel_id: params['channel'], value: value }
               object.new(realtime_params).send(method)
             end
@@ -48,7 +47,6 @@ module Bot
 
           end
         end
-
       end
 
       realtime_client.start # listen a STREAM
