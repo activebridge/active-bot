@@ -47,11 +47,6 @@ RSpec.describe Bot::Messages::ChooseProject do
   end
 
   describe '#choose_project' do
-    #include_examples 'generate a message'
-
-    let(:message) { Bot::Message.new(params) }
-    let(:generated_message) { message.extend(subject).generate }
-
-    it { expect(generated_message).to eq options }
+    include_examples 'generate a message'
   end
 end
