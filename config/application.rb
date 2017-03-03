@@ -12,8 +12,6 @@ require 'action_view/railtie'
 require 'action_cable/engine'
 # require "sprockets/railtie"
 require 'rails/test_unit/railtie'
-
-require './lib/active_support/core_ext/date/last_business_day'
 require 'slack'
 
 # Require the gems listed in Gemfile, including any gems

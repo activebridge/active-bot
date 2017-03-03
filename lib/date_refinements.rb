@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'date'
 
-class Date
-  class << self
+module DateRefinements
+  refine Date.singleton_class do
     def last_business_day(date = Date.today)
       beginning_of_month = date.beginning_of_month
 

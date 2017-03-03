@@ -81,9 +81,11 @@ module Bot
 
     def send_to_accountent
       message.text = "*#{user.name}* (slack_id: _#{user.slack_name}_):\n" + final_text_message
-      message.extend(Bot::Messages::General)
-      options = { user_slack_id: user.company_accountant.slack_id, message: message.generate }
-      Bot::Api.post_message(options)
+
+      Bot::Api.post_message(
+        user_slack_id: user.company_accountant.slack_id,
+        message: message.extend(Bot::Messages::General).generate
+      )
     end
 
     def confirmed?

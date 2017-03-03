@@ -69,6 +69,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#current_month_working_hours' do
+    using DateRefinements
     let(:user) { create(:user) }
     let!(:general_dayoffs) { create_list(:day_off, 3, user: nil) }
     let!(:user_dayoff) { create(:day_off, user: user) }

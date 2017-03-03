@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class User < ApplicationRecord
   WORKING_HOURS_PER_DAY = 8
   belongs_to :company
@@ -29,6 +30,7 @@ class User < ApplicationRecord
     role == 'accountant'
   end
 
+  using DateRefinements
   def current_month_working_hours
     day_offs = DayOff.general.this_months + self.day_offs.this_months
     workdays_count = Date.current_month_workdays.count - day_offs.count

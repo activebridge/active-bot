@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+
 desc 'Bot track the time of each user on a project for a month'
 task accounting_bot: :environment do # should run once in a months (last business day)
+  using DateRefinements
+
   if Date.today == Date.last_business_day_for_current_month
     client = Slack::Client.new
 
@@ -12,6 +15,5 @@ task accounting_bot: :environment do # should run once in a months (last busines
       message.extend(Bot::Messages::FullTime)
       client.chat_postMessage(message.generate)
     end
-
   end
 end

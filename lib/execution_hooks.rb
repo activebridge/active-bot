@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ExecutionHooks
   # this method is invoked whenever a new instance method is added to a class
   def method_added(method_name)

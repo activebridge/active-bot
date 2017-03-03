@@ -9,5 +9,9 @@ class DayOff < ApplicationRecord
     where(date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
   }
 
+  scope :this_years, lambda {
+    where(date: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year)
+  }
+
   scope :general, -> { where(user: nil) }
 end
