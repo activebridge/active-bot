@@ -2,18 +2,18 @@
 
 module RangeRefinements
   refine Range do
-    def every(step, &block)
+    def every(step)
       c_time = self.begin.to_datetime
       finish_time = self.end.to_datetime
-      foo_compare = self.exclude_end? ? :< : :<=
+      foo_compare = exclude_end? ? :< : :<=
 
       arr = []
-      while c_time.send(foo_compare, finish_time) do
+      while c_time.send(foo_compare, finish_time)
         arr << c_time
         c_time = c_time.advance(step)
       end
 
-      return arr
+      arr
     end
   end
 end

@@ -12,7 +12,7 @@ module DateRefinements
       end
       day
     end
-    alias last_business_day_for_current_month last_business_day
+    alias_method :last_business_day_for_current_month, :last_business_day
 
     def workdays
       d1 = Date.new(Time.now.year, Time.now.month, 1) # first day of month\period
@@ -20,6 +20,6 @@ module DateRefinements
       wdays = [0, 6] # weekend days by numbers on week
       (d1..d2).reject { |d| wdays.include? d.wday } # Day.wday number day in week
     end
-    alias current_month_workdays workdays
+    alias_method :current_month_workdays, :workdays
   end
 end
