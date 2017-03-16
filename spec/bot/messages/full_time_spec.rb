@@ -9,11 +9,11 @@ RSpec.describe Bot::Messages::FullTime do
   let(:options) do
     {
       channel: channel_id,
-      text: "Have you been working full time for #{customer_name} customer this month?",
+      text: "Have you been working `full time` for `#{customer_name}` customer this month?",
       as_user: true,
       attachments: [
         {
-          text: "#{hours} hours",
+          text: "`#{hours} hours`",
           fallback: 'You are not able to set full time.',
           callback_id: 'full_time',
           color: 'good',

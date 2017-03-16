@@ -3,7 +3,7 @@ module Bot::Messages::OtherProject
   def generate
     {
       channel: @channel_id,
-      text: 'Would you like to track any other project?',
+      text: 'Would you like to track `any other project`?',
       as_user: true,
       attachments: attachments.to_json
     }

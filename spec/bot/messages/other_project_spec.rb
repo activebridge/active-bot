@@ -6,7 +6,7 @@ RSpec.describe Bot::Messages::OtherProject do
   let(:options) do
     {
       channel: params[:channel_id],
-      text: 'Would you like to track any other project?',
+      text: 'Would you like to track `any other project`?',
       as_user: true,
       attachments: [
         {

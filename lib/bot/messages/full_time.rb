@@ -3,7 +3,7 @@ module Bot::Messages::FullTime
   def generate
     {
       channel: @channel_id,
-      text: "Have you been working full time for #{@customer_name} customer this month?",
+      text: "Have you been working `full time` for `#{@customer_name}` customer this month?",
       as_user: true,
       attachments: attachments.to_json
     }
@@ -14,7 +14,7 @@ module Bot::Messages::FullTime
   def attachments
     [
       {
-        text: "#{@hours} hours",
+        text: "`#{@hours} hours`",
         fallback: 'You are not able to set full time.',
         callback_id: 'full_time',
         color: 'good',

@@ -8,7 +8,7 @@ RSpec.describe Bot::Messages::InsertHours do
   let(:options) do
     {
       channel: channel_id,
-      text: "How many hours did you work for #{customer_name}?",
+      text: "How many hours did you work for `#{customer_name}`?",
       attachments: [],
       as_user: true
     }

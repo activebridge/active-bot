@@ -3,7 +3,9 @@ require 'rails_helper'
 
 RSpec.describe Bot::Realtime::Dayoff do
   let(:company) { create(:company) }
+  let(:user) { create(:user) }
   let(:dayoff_date) { attributes_for(:day_off)[:date].to_s }
+  let(:workdays_range) { (Date.parse('15-03-2017')..Date.parse('22-03-2017')) }
   let(:params) { { company: company, channel_id: 'channelId', value: dayoff_date } }
   let(:subject) { Bot::Realtime::Dayoff.new(params) }
 
@@ -33,6 +35,16 @@ RSpec.describe Bot::Realtime::Dayoff do
     let(:text) { "Day Off #{dayoff_date} has been deleted." }
     it 'a dayoff' do
       expect { subject.delete }.to change(DayOff, :count).by(-1)
+      expect(subject.text).to eq text
+    end
+  end
+
+  describe '#vocation' do
+    let(:params) { { company: company, user: user, channel_id: 'channelId', value: 'I vould like to have a vocation from 15-03-2017 to 22-03-2017' } }
+    let(:text) { "You have a vocation for `6 working days`. (2017-03-15 - 2017-03-22)" }
+
+    it 'dayoff' do
+      expect { subject.vocation }.to change(DayOff, :count).by(6)
       expect(subject.text).to eq text
     end
   end
