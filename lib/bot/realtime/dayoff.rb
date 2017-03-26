@@ -19,7 +19,25 @@ module Bot
         @text = "Day Off #{value} has been deleted."
       end
 
+      def vocation
+        @text = "You have a vocation for `#{range.count} working days`. (#{range.first} - #{range.last})"
+        range.each { |day| company.day_offs.create!(date: day, user: user) }
+      end
+
       private
+
+      def range
+        @range ||= workdays_range
+      end
+
+      def workdays_range
+        from = Date.parse(value) # first day
+        to = convert_to_date(value.split('to')[-1]) # last day
+
+        (from..to).reject { |d| [0, 6].include? d.wday } # only workdays
+      rescue
+        []
+      end
 
       def convert_to_date(a_string)
         Date.parse(a_string)

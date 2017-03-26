@@ -10,11 +10,13 @@ module Bot
       end
 
       def add
+        return if user.developer?
         company.customers << ::Customer.find_or_create_by(name: value)
         @text = "Customer #{value} has been created."
       end
 
       def delete
+        return if user.developer?
         company.customers.where(name: value).delete_all
         @text = "Customer #{value} has been deleted."
       end

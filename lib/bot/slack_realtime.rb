@@ -1,55 +1,57 @@
 # frozen_string_literal: true
 module Bot
   class SlackRealtime
-    def self.run
-      client = Slack::Client.new
-      realtime_client = client.realtime
+    class << self
+      def run
+        client = Slack::Client.new
+        realtime_client = client.realtime
 
-      realtime_client.on :hello do
-        Rails.logger.info 'LETS GO SlackRealtime =======>>>'
+        realtime_client.on :hello do
+          Rails.logger.info 'LETS GO SlackRealtime =======>>>'
+        end
+
+        realtime_client.on :message do |params|
+          company = Company.find_by(slack_team_id: params['team'])
+          generate_response(company, params) if company
+        end
+
+        realtime_client.start # listen a STREAM
       end
 
-      realtime_client.on :message do |params|
-        company = Company.find_by(slack_team_id: params['team'])
+      private
 
-        if company
+      def generate_response(company, params)
+        class_name, method = params['text'].split
+
+        object = "Bot::Realtime::#{class_name.capitalize}".safe_constantize
+        if object && object.instance_methods(false).include?(method.to_sym)
+          object.new(realtime_params(company, params)).send(method)
+        elsif params['text'].to_i.positive?
           user = company.users.find_by(slack_id: params['user'])
-          slack_message = params['text']
-
-          # TODO: refactor (use class with roles)
-          if user&.admin? || user&.accountant?
-            # class_names: customer, dayoff
-            # methods: list, add, delete
-            class_name, method = slack_message.split
-            object = "Bot::Realtime::#{class_name.capitalize}".safe_constantize
-
-            if object && object.instance_methods(false).include?(method.to_sym)
-              value = slack_message.split[2..-1].join(' ')
-              realtime_params = { company: company, channel_id: params['channel'], value: value }
-              object.new(realtime_params).send(method)
-            end
-          elsif user&.developer?
-            case slack_message
-            when /dayoff list/
-              Bot::Realtime::DayOff.new(company: company, channel_id: params['channel']).list
-            else
-              if slack_message.to_i.positive?
-                last_invoice = user.invoices.last
-                if last_invoice && last_invoice.hours.nil?
-                  last_invoice.update_attributes(hours: slack_message.to_i)
-
-                  message = Bot::Message.new(channel_id: params['channel'])
-                  message.extend(Bot::Messages::OtherProject)
-                  Bot::Api.post_message(message: message.generate)
-                end
-              end
-            end
-
+          if user && update_invoice(user, params['text'])
+            render_other_project_message(params['channel'])
           end
         end
       end
 
-      realtime_client.start # listen a STREAM
+      def realtime_params(company, params)
+        value = params['text'].split[2..-1].join(' ')
+        user = company.users.find_by(slack_id: params['user'])
+
+        { company: company, user: user, channel_id: params['channel'], value: value }
+      end
+
+      def update_invoice(user, slack_message)
+        last_invoice = user.invoices.last
+        return false unless last_invoice || last_invoice.hours.nil?
+        last_invoice.update_attributes(hours: slack_message.to_i)
+      end
+
+      def render_other_project_message(channel_id)
+        message = Bot::Message.new(channel_id: channel_id)
+        message.extend(Bot::Messages::OtherProject)
+        Bot::Api.post_message(message: message.generate)
+      end
     end
   end
 end
