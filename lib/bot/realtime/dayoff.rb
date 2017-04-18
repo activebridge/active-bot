@@ -6,17 +6,21 @@ module Bot
       after_hook :notify
 
       def list
-        @text = company.day_offs.map(&:date).join("\n")
+        dayoffs = company.day_offs.general + user.day_offs
+        @text = dayoffs.map(&:date).join("\n")
       end
 
       def add
+        return if user.developer?
         company.day_offs << ::DayOff.find_or_create_by(date: convert_to_date(value))
         @text = "Day Off #{value} has been created."
       end
 
       def delete
-        company.day_offs.where(date: convert_to_date(value)).delete_all
-        @text = "Day Off #{value} has been deleted."
+        if user.admin? || user.accountant?
+          company.day_offs.where(date: convert_to_date(value)).delete_all
+          @text = "Day Off #{value} has been deleted."
+        end
       end
 
       def vocation

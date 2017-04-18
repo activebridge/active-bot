@@ -2,11 +2,11 @@
 require 'rails_helper'
 
 RSpec.describe Bot::Realtime::Dayoff do
-  let(:company) { create(:company) }
-  let(:user) { create(:user) }
+  let!(:company) { create(:company) }
+  let!(:user) { create(:user, company: company) }
   let(:dayoff_date) { attributes_for(:day_off)[:date].to_s }
   let(:workdays_range) { (Date.parse('15-03-2017')..Date.parse('22-03-2017')) }
-  let(:params) { { company: company, channel_id: 'channelId', value: dayoff_date } }
+  let(:params) { { company: company, channel_id: 'channelId', value: dayoff_date, user: user } }
   let(:subject) { Bot::Realtime::Dayoff.new(params) }
 
   before do
@@ -14,8 +14,9 @@ RSpec.describe Bot::Realtime::Dayoff do
   end
 
   describe '#list' do
-    let!(:dayoffs) { create_list(:day_off, 5, company: company) }
-    let(:dayoff_list) { dayoffs.map(&:date).join("\n") }
+    let!(:dayoffs) { create_list(:day_off, 5, company: company, user: nil) }
+    let!(:user_dayoffs) { create_list(:day_off, 3, company: company, user: user) }
+    let(:dayoff_list) { (dayoffs + user_dayoffs).map(&:date).join("\n") }
     it 'of dayoffs' do
       subject.list
       expect(subject.text).to eq dayoff_list
@@ -23,6 +24,7 @@ RSpec.describe Bot::Realtime::Dayoff do
   end
 
   describe '#add' do
+    let!(:user) { create(:user, company: company, role: 'admin') }
     let(:text) { "Day Off #{dayoff_date} has been created." }
     it 'new dayoff' do
       expect { subject.add }.to change(DayOff, :count).by(1)
@@ -31,7 +33,8 @@ RSpec.describe Bot::Realtime::Dayoff do
   end
 
   describe '#delete' do
-    let!(:dayoff) { create(:day_off, company: company, date: dayoff_date) }
+    let!(:dayoff) { create(:day_off, company: company, date: dayoff_date, user: nil) }
+    let!(:user) { create(:user, company: company, role: 'admin') }
     let(:text) { "Day Off #{dayoff_date} has been deleted." }
     it 'a dayoff' do
       expect { subject.delete }.to change(DayOff, :count).by(-1)
