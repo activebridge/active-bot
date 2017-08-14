@@ -7,7 +7,7 @@ module Bot
 
       def list
         dayoffs = company.day_offs.general + user.day_offs
-        @text = dayoffs.map(&:date).join("\n")
+        @text = list_of_dates(dayoffs.map(&:date))
       end
 
       def add
@@ -16,15 +16,18 @@ module Bot
         @text = "Day Off #{value} has been created."
       end
 
+      # TODO: delete personal dayoff's
       def delete
         if user.admin? || user.accountant?
           company.day_offs.where(date: convert_to_date(value)).delete_all
           @text = "Day Off #{value} has been deleted."
+        else
+          @text = "You are not able to delete a dayoff: #{value}."
         end
       end
 
-      def vocation
-        @text = "You have a vocation for `#{range.count} working days`. (#{range.first} - #{range.last})"
+      def vacation
+        @text = "You have a vacation for `#{range.count} working days`. (#{range.first} - #{range.last})"
         range.each { |day| company.day_offs.create!(date: day, user: user) }
       end
 
@@ -47,6 +50,11 @@ module Bot
         Date.parse(a_string)
       rescue
         Date.today + 1.day
+      end
+
+      using DateRefinements
+      def list_of_dates(dates)
+        Date.print_dates(dates)
       end
     end
   end

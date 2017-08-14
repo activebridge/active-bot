@@ -18,6 +18,7 @@ class User < ApplicationRecord
     invoices.last&.customer || company.default_customer
   end
 
+  # TODO: use enum
   def developer?
     role == 'developer'
   end

@@ -9,6 +9,7 @@ AllCops:
     - 'Gemfile'
     - 'spec/support/**/*'
     - 'spec/**/*'
+    - 'lib/date_refinements.rb'
 Metrics/LineLength:
   Enabled: false
 Style/Documentation:
@@ -17,3 +18,5 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/MutableConstant:
   Enabled: false
+Metrics/AbcSize:
+  Max: 25

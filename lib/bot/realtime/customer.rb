@@ -13,6 +13,8 @@ module Bot
         return if user.developer?
         company.customers << ::Customer.find_or_create_by(name: value)
         @text = "Customer #{value} has been created."
+      rescue
+        @text = 'Something went wrong. Try again.'
       end
 
       def delete

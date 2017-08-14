@@ -42,12 +42,12 @@ RSpec.describe Bot::Realtime::Dayoff do
     end
   end
 
-  describe '#vocation' do
-    let(:params) { { company: company, user: user, channel_id: 'channelId', value: 'I vould like to have a vocation from 15-03-2017 to 22-03-2017' } }
-    let(:text) { "You have a vocation for `6 working days`. (2017-03-15 - 2017-03-22)" }
+  describe '#vacation' do
+    let(:params) { { company: company, user: user, channel_id: 'channelId', value: 'I vould like to have a vacation from 15-03-2017 to 22-03-2017' } }
+    let(:text) { "You have a vacation for `6 working days`. (2017-03-15 - 2017-03-22)" }
 
     it 'dayoff' do
-      expect { subject.vocation }.to change(DayOff, :count).by(6)
+      expect { subject.vacation }.to change(DayOff, :count).by(6)
       expect(subject.text).to eq text
     end
   end
