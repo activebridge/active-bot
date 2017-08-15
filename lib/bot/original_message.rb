@@ -76,7 +76,7 @@ module Bot
     end
 
     def current_month_invoices
-      user.invoices.this_months.includes(:customer)
+      user.invoices.last_months.includes(:customer)
     end
 
     def send_to_accountent

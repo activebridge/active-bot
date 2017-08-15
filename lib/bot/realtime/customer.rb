@@ -12,7 +12,7 @@ module Bot
       def add
         return if user.developer?
         company.customers << ::Customer.find_or_create_by(name: value)
-        @text = "Customer #{value} has been created."
+        @text = "Customer `#{value}` has been created."
       rescue
         @text = 'Something went wrong. Try again.'
       end
@@ -20,7 +20,7 @@ module Bot
       def delete
         return if user.developer?
         company.customers.where(name: value).delete_all
-        @text = "Customer #{value} has been deleted."
+        @text = "Customer `#{value}` has been deleted."
       end
     end
   end

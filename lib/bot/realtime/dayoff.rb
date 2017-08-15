@@ -27,8 +27,8 @@ module Bot
       end
 
       def vacation
-        @text = "You have a vacation for `#{range.count} working days`. (#{range.first} - #{range.last})"
         range.each { |day| company.day_offs.create!(date: day, user: user) }
+        @text = "You have a vacation for `#{range.count} working days`. (#{range.first} - #{range.last})"
       end
 
       private

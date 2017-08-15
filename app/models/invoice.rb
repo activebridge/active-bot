@@ -7,7 +7,22 @@ class Invoice < ApplicationRecord
 
   validates_numericality_of :hours, only_integer: true, greater_than: 0, less_than_or_equal_to: 400, allow_nil: true
 
-  scope :this_months, lambda {
-    where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-  }
+  scope :last_months, -> { where(created_at: last_month_daterange) }
+
+  private
+
+  def self.last_month_daterange
+    today = Date.today
+    return ((last_business_day_for_current_month)..today.to_date.end_of_month) if today >= last_business_day_for_current_month && today <= today.to_date.end_of_month
+    (last_business_day_for_prev_month..today)
+  end
+
+  using DateRefinements
+  def self.last_business_day_for_current_month
+    @last_business_day_for_current_month ||= Date.last_business_day_for_current_month
+  end
+
+  def self.last_business_day_for_prev_month
+    @last_business_day_for_prev_month ||= Date.last_business_day(last_business_day_for_current_month<<1)
+  end
 end
