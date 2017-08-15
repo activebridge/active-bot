@@ -64,7 +64,7 @@ module DateRefinements
     end
 
     def print_dates(dates, text = '')
-      sorted_dates = dates.sort
+      sorted_dates = dates.uniq.sort
       start_range = nil
 
       sorted_dates.each_with_index do |date, index|
