@@ -34,7 +34,7 @@ module Bot
       private
 
       def range
-        @range ||= workdays_range
+        @range ||= workdays_range - company.day_offs
       end
 
       def workdays_range

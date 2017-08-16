@@ -16,7 +16,7 @@ RSpec.describe Bot::Realtime::Dayoff do
   describe '#list' do
     let!(:dayoffs) { create_list(:day_off, 5, company: company, user: nil) }
     let!(:user_dayoffs) { create_list(:day_off, 3, company: company, user: user) }
-    let(:dayoff_list) { (dayoffs + user_dayoffs).map(&:date).join("\n") }
+    let(:dayoff_list) { list_of_dates }
     it 'of dayoffs' do
       subject.list
       expect(subject.text).to eq dayoff_list
@@ -51,4 +51,7 @@ RSpec.describe Bot::Realtime::Dayoff do
       expect(subject.text).to eq text
     end
   end
+
+  using DateRefinements
+  let(:list_of_dates) { Date.print_dates((dayoffs + user_dayoffs).map(&:date)) }
 end
