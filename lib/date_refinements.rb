@@ -70,7 +70,7 @@ module DateRefinements
       sorted_dates.each_with_index do |date, index|
         if (sorted_dates[index + 1] == date + 1.day) && start_range.nil?
           start_range = date
-        elsif (sorted_dates[index + 1] == date + 1.day) && start_range
+        elsif ((sorted_dates[index + 1] == date + 1.day) || (date.friday? && sorted_dates[index + 1].monday?)) && start_range
           next
         elsif (sorted_dates[index + 1] != date + 1.day) && start_range
           text += "#{date_range(start_range, date)}\n"
