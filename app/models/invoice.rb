@@ -13,7 +13,7 @@ class Invoice < ApplicationRecord
     def last_month_daterange
       today = Date.today
       return ((last_business_day_for_current_month)..today.to_date.end_of_month) if today >= last_business_day_for_current_month && today <= today.to_date.end_of_month
-      (last_business_day_for_prev_month..today)
+      (last_business_day_for_prev_month...(today + 1.day))
     end
 
     using DateRefinements

@@ -18,7 +18,7 @@ RSpec.describe Invoice, type: :model do
 
       it 'count' do
         expect(Invoice.count).to eq 5
-        expect(Invoice.this_months.count).to eq 3
+        expect(Invoice.last_months.count).to eq 3
       end
     end
   end

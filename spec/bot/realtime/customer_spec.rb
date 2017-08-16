@@ -23,7 +23,7 @@ RSpec.describe Bot::Realtime::Customer do
 
   describe '#add' do
     let(:user) { create(:user, company: company, role: 'admin') }
-    let(:text) { "Customer #{customer_name} has been created." }
+    let(:text) { "Customer `#{customer_name}` has been created." }
     it 'new customer' do
       expect { subject.add }.to change(Customer, :count).by(1)
       expect(subject.text).to eq text
@@ -41,7 +41,7 @@ RSpec.describe Bot::Realtime::Customer do
   describe '#delete' do
     let(:user) { create(:user, company: company, role: 'admin') }
     let!(:customer) { create(:customer, company: company, name: customer_name) }
-    let(:text) { "Customer #{customer_name} has been deleted." }
+    let(:text) { "Customer `#{customer_name}` has been deleted." }
     it 'existing customer' do
       expect { subject.delete }.to change(Customer, :count).by(-1)
       expect(subject.text).to eq text
