@@ -34,7 +34,7 @@ module Bot
       private
 
       def range
-        @range ||= workdays_range - company.day_offs
+        @range ||= workdays_range - company.day_offs.where(user: nil).map(&:date) # workdays without company dayoffs
       end
 
       def workdays_range
