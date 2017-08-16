@@ -7,7 +7,7 @@ module Bot
 
       def list
         dayoffs = company.day_offs.general + user.day_offs
-        @text = list_of_dates(dayoffs.map(&:date))
+        @text = list_of_dates(dayoffs.map(&:date)) + unused_dayoffs_text
       end
 
       def add
@@ -55,6 +55,12 @@ module Bot
       using DateRefinements
       def list_of_dates(dates)
         Date.print_dates(dates)
+      end
+
+      def unused_dayoffs_text
+        #dayoffs_count = DayOff::DAYOFFS_PER_YEAR - user.day_offs.count
+        #return 'Your vacation has been used this year.' unless dayoffs_count.positive?
+        #"You are able to use `#{dayoffs_count} days` of vacation."
       end
     end
   end

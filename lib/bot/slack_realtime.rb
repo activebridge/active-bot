@@ -22,10 +22,12 @@ module Bot
 
       def generate_response(company, params)
         class_name, method = params['text'].split
-
         object = "Bot::Realtime::#{class_name.capitalize}".safe_constantize
-        if object && object.instance_methods(false).include?(method.to_sym)
+
+        if object && object.instance_methods(false).include?(method&.to_sym)
           object.new(realtime_params(company, params)).send(method)
+        elsif params['text']&.downcase&.include? 'help'
+          Bot::Realtime::Help.new(realtime_params(company, params)).show
         elsif params['text'].to_i.positive?
           user = company.users.find_by(slack_id: params['user'])
           if user && update_invoice(user, params['text'])
@@ -35,7 +37,7 @@ module Bot
       end
 
       def realtime_params(company, params)
-        value = params['text'].split[2..-1].join(' ')
+        value = params['text'].split[2..-1]&.join(' ')
         user = company.users.find_by(slack_id: params['user'])
 
         { company: company, user: user, channel_id: params['channel'], value: value }

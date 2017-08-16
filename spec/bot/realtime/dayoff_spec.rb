@@ -8,6 +8,7 @@ RSpec.describe Bot::Realtime::Dayoff do
   let(:workdays_range) { (Date.parse('15-03-2017')..Date.parse('22-03-2017')) }
   let(:params) { { company: company, channel_id: 'channelId', value: dayoff_date, user: user } }
   let(:subject) { Bot::Realtime::Dayoff.new(params) }
+  let(:unused_dayoffs_text) { "You are able to use `#{DayOff::DAYOFFS_PER_YEAR - user_dayoffs.count} days` of vacation." }
 
   before do
     allow_any_instance_of(Bot::Realtime::Dayoff).to receive(:notify).and_return(true)
@@ -16,10 +17,18 @@ RSpec.describe Bot::Realtime::Dayoff do
   describe '#list' do
     let!(:dayoffs) { create_list(:day_off, 5, company: company, user: nil) }
     let!(:user_dayoffs) { create_list(:day_off, 3, company: company, user: user) }
-    let(:dayoff_list) { list_of_dates }
+    let(:dayoff_text) { list_of_dates + unused_dayoffs_text }
     it 'of dayoffs' do
       subject.list
-      expect(subject.text).to eq dayoff_list
+      expect(subject.text).to eq dayoff_text
+    end
+
+    describe 'vacation has been used' do
+      let!(:user_dayoffs) { create_list(:day_off, 15, company: company, user: user) }
+      it do
+        subject.list
+        expect(subject.text).to eq list_of_dates + 'Your vacation has been used this year.'
+      end
     end
   end
 

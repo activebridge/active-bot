@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class DayOff < ApplicationRecord
+  DAYOFFS_PER_YEAR = 15
   belongs_to :company
   belongs_to :user, optional: true
 
